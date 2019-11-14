@@ -33,6 +33,13 @@ nix-build -A skeleton
 
 ## Hack: 
 
+Optional: setup caches.
+
+```
+$ nix-env -iA cachix -f https://cachix.org/api/v1/install
+$ cachix use hercules-ci
+```
+
 Enter `nix-shell`. You may then use the provisioned `ghcid`, `ghcide`,
 `ormolu`, `hlint` and `cabal` executables from the repository root. This
 nix-shell writes a local `.gitignore`-filtered cabal file upon starting. This
