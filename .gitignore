@@ -1,5 +1,6 @@
-skeleton.cabal
+monitor.cabal
 result*
 dhall-to-cabal
 .ghc*
 dist*
+*_flycheck.*

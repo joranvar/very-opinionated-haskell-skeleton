@@ -15,7 +15,7 @@ let
   };
 
   hs-tools = { haskell, mkDerivation, stdenv, cabal-install, apply-refact
-    , hdevtools, Glob, hindent, fswatch, hlint, protolude, shake, Cabal
+    , hdevtools, Glob, hindent, fswatch, hlint, relude, shake, Cabal
     , fix-imports, ghcid, typed-process, optparse-applicative, unix
     , cabal-helper, dhall }:
     let
@@ -65,39 +65,39 @@ let
       mkdir -p $out
       cp -r ${source}/* $out
       chmod -R +rw $out
-      cp ${cabalFile dhallFile} $out/skeleton.cabal
-      chmod +rw $out/skeleton.cabal
+      cp ${cabalFile dhallFile} $out/monitor.cabal
+      chmod +rw $out/monitor.cabal
     '';
 
   haskellPackages = pkgs.haskellPackages.override {
     overrides = self: super:
       with pkgs.haskell.lib; rec {
         dhall = super.dhall_1_24_0;
-        skeleton = self.callCabal2nix "skeleton.cabal"
-          (patchedSrc ./. ./skeleton.dhall) { };
+        monitor = self.callCabal2nix "monitor.cabal"
+          (patchedSrc ./. ./monitor.dhall) { };
       };
   };
 in {
-  skeleton = haskellPackages.skeleton;
+  monitor = haskellPackages.monitor;
 
   hack = pkgs.haskellPackages.shellFor {
     packages = p: [
-      haskellPackages.skeleton
+      haskellPackages.monitor
       (haskellPackages.callPackage hs-tools { })
     ];
     withHoogle = true;
     #buildInputs = [ ];
     shellHook = ''
-      export NIX_GHC="${haskellPackages.skeleton.env.NIX_GHC}"
-      export NIX_GHCPKG="${haskellPackages.skeleton.env.NIX_GHCPKG}"
-      export NIX_GHC_DOCDIR="${haskellPackages.skeleton.env.NIX_GHC_DOCDIR}"
-      export NIX_GHC_LIBDIR="${haskellPackages.skeleton.env.NIX_GHC_LIBDIR}"
+      export NIX_GHC="${haskellPackages.monitor.env.NIX_GHC}"
+      export NIX_GHCPKG="${haskellPackages.monitor.env.NIX_GHCPKG}"
+      export NIX_GHC_DOCDIR="${haskellPackages.monitor.env.NIX_GHC_DOCDIR}"
+      export NIX_GHC_LIBDIR="${haskellPackages.monitor.env.NIX_GHC_LIBDIR}"
       export LOCALE_ARCHIVE=${pkgs.glibcLocales}/lib/locale/locale-archive
       export LANG=en_US.UTF-8
-      cp $CABALFILE skeleton.cabal
+      cp $CABALFILE monitor.cabal
       ln -s ${dhall-to-cabal-resources} dhall-to-cabal
-      chmod +rw skeleton.cabal
+      chmod +rw monitor.cabal
     '';
-    CABALFILE = cabalFile ./skeleton.dhall;
+    CABALFILE = cabalFile ./monitor.dhall;
   };
 }

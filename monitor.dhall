@@ -85,11 +85,11 @@ let copts =
 
 let nobound = λ(p : Text) → { bounds = prelude.anyVersion, package = p }
 
-let deps = { base = nobound "base", protolude = nobound "protolude" }
+let deps = { base = nobound "base", relude = nobound "relude" }
 
-let allmodules = [ "Skeleton" ]
+let allmodules = [ "Monitor" ]
 
-let libdep = [ deps.base, deps.protolude ]
+let libdep = [ deps.base, deps.relude ]
 
 let common =
       { defexts =
@@ -108,7 +108,7 @@ let common =
 
 in    prelude.defaults.Package
     ⫽ { name =
-          "skeleton"
+          "monitor"
       , version =
           prelude.v "1.0.0"
       , author =
@@ -120,7 +120,7 @@ in    prelude.defaults.Package
       , category =
           "tools"
       , description =
-          "Very opinionated haskell skeleton"
+          "Very opinionated haskell monitor"
       , sub-libraries =
           [ { library =
                   λ(config : types.Config)
@@ -134,7 +134,7 @@ in    prelude.defaults.Package
                     }
                   ⫽ common.copts ([] : List Text)
             , name =
-                "skeletonlib"
+                "monitorlib"
             }
           ]
       , executables =
@@ -144,11 +144,11 @@ in    prelude.defaults.Package
                   ⫽ { main-is =
                         "bin/Main.hs"
                     , build-depends =
-                        [ common.nobound "skeletonlib" ]
+                        [ common.nobound "monitorlib" ]
                     }
                   ⫽ common.copts ([] : List Text)
             , name =
-                "skeleton"
+                "monitor"
             }
           ]
       , extra-source-files =
@@ -163,5 +163,5 @@ in    prelude.defaults.Package
           [   prelude.defaults.SourceRepo
           ]
       , synopsis =
-          "skeleton"
+          "monitor"
       }
