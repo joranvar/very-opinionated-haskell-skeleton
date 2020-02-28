@@ -77,8 +77,24 @@ let
           (patchedSrc ./. ./monitor.dhall) { };
       };
   };
-in {
+
   monitor = haskellPackages.monitor;
+in {
+  inherit monitor;
+
+  monitor-docker = pkgs.dockerTools.buildImage {
+    name = "monitor";
+    config = {
+      Cmd = [ "${monitor}/bin/monitor" ];
+      ExposedPorts = {
+        "8080/tcp" = {};
+      };
+      WorkingDir = "/data";
+      Volumes = {
+        "/data" = {};
+      };
+    };
+  };
 
   hack = pkgs.haskellPackages.shellFor {
     packages = p: [
